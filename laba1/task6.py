@@ -4,4 +4,4 @@ p = int(input("Введите давление (кПа):"))
 r=8.314
 
 n = (p*v)/(r*t)
-print("Моли:",round(n,3))
+print(f"Моли: {round(n, 3)}")
