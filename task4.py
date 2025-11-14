@@ -1,118 +1,91 @@
-def analyze_transport_expenses(expenses):
+import math
+
+
+# Простая функция для определенного интеграла методом прямоугольников
+def calculate_integral(f, a, b, n=1000):
     """
-    Анализирует расходы на проезд по месяцам
+    Вычисляет определенный интеграл функции f от a до b
+    using rectangle method
     """
-    # Названия месяцев для красивого вывода
-    months_names = {
-        1: "Январь", 2: "Февраль", 3: "Март", 4: "Апрель",
-        5: "Май", 6: "Июнь", 7: "Июль", 8: "Август",
-        9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь"
-    }
+    h = (b - a) / n
+    total = 0
 
-    # Определяем зимние и летние месяцы (номера месяцев с 1 до 12)
-    winter_months = [12, 1, 2]  # декабрь, январь, февраль
-    summer_months = [6, 7, 8]  # июнь, июль, август
+    for i in range(n):
+        x = a + i * h
+        total += f(x) * h
 
-    # Суммируем расходы по сезонам
-    winter_total = sum(expenses[month - 1] for month in winter_months)
-    summer_total = sum(expenses[month - 1] for month in summer_months)
-
-    # Сравниваем сезоны
-    print("Анализ расходов на проезд:")
-    print(f"Зимние месяцы {[months_names[m] for m in winter_months]}: {winter_total} руб.")
-    print(f"Летние месяцы {[months_names[m] for m in summer_months]}: {summer_total} руб.")
-
-    if winter_total > summer_total:
-        print("Больше денег тратится зимой")
-    elif summer_total > winter_total:
-        print("Больше денег тратится летом")
-    else:
-        print("Расходы зимой и летом одинаковы")
-
-    # Создаем список кортежей (расход, номер месяца) и сортируем по убыванию расходов
-    month_expenses = [(expense, month_num) for month_num, expense in enumerate(expenses, 1)]
-    sorted_months = sorted(month_expenses, key=lambda x: x[0], reverse=True)
-
-    print(f"\nВсе месяцы отсортированные по расходам (от наибольшего к наименьшему):")
-    print("-" * 50)
-
-    for i, (expense, month_num) in enumerate(sorted_months, 1):
-        print(f"{i:2}. {months_names[month_num]:10} ({month_num:2} месяц): {expense:8} руб.")
-
-    return winter_total, summer_total, sorted_months
+    return total
 
 
-# Пример использования
-if __name__ == "__main__":
-    # Ввод данных от пользователя
-    print("Введите расходы на проезд по месяцам (12 чисел через пробел):")
-    try:
-        expenses = list(map(float, input().split()))
-        if len(expenses) != 12:
-            print("Ошибка: нужно ввести ровно 12 чисел!")
-        else:
-            analyze_transport_expenses(expenses)
-    except ValueError:
-        print("Ошибка: введите числа через пробел!")
-
-
-# Альтернативный вариант с группировкой по одинаковым расходам
-def analyze_with_groups(expenses):
+# Простая функция для двойного интеграла
+def calculate_double_integral(f, a, b, c, d, n=100):
     """
-    Альтернативная версия с группировкой месяцев по одинаковым расходам
+    Вычисляет двойной интеграл функции f(x,y)
+    по области [a,b] x [c,d]
     """
-    months_names = {
-        1: "Январь", 2: "Февраль", 3: "Март", 4: "Апрель",
-        5: "Май", 6: "Июнь", 7: "Июль", 8: "Август",
-        9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь"
-    }
+    hx = (b - a) / n
+    hy = (d - c) / n
+    total = 0
 
-    # Создаем словарь для группировки месяцев по расходам
-    expense_groups = {}
-    for month_num, expense in enumerate(expenses, 1):
-        if expense not in expense_groups:
-            expense_groups[expense] = []
-        expense_groups[expense].append(month_num)
+    for i in range(n):
+        x = a + i * hx
+        for j in range(n):
+            y = c + j * hy
+            total += f(x, y) * hx * hy
 
-    # Сортируем расходы по убыванию
-    sorted_expenses = sorted(expense_groups.items(), key=lambda x: x[0], reverse=True)
-
-    print("\n" + "=" * 60)
-    print("Версия с группировкой по одинаковым расходам:")
-    print("-" * 60)
-
-    for i, (expense, months_list) in enumerate(sorted_expenses, 1):
-        months_str = ", ".join([f"{months_names[m]} ({m})" for m in months_list])
-        print(f"{i:2}. Расход: {expense:8} руб. | Месяцы: {months_str}")
+    return total
 
 
-# Тестовый пример
-def test_program():
-    """
-    Тестирование программы на примере
-    """
-    print("\n" + "=" * 60)
-    print("Тестовый пример:")
-
-    # Тестовые данные (некоторые месяцы с одинаковыми расходами)
-    test_expenses = [1500, 1600, 1200, 1200, 1300, 1100, 1000, 900, 1000, 1400, 1400, 1700]
-
-    print("Исходные расходы по месяцам:")
-    months_names = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн",
-                    "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
-
-    for i, (month, expense) in enumerate(zip(months_names, test_expenses)):
-        print(f"{month}: {expense:5} руб.", end=" | ")
-        if (i + 1) % 4 == 0:
-            print()
-    print()
-
-    # Основной анализ
-    analyze_transport_expenses(test_expenses)
-
-    # Дополнительный анализ с группировкой
-    analyze_with_groups(test_expenses)
+# Примеры функций
+def f1(x):
+    """f(x) = x²"""
+    return x ** 2
 
 
-# Запуск тестового примера
-test_program()
+def f2(x):
+    """f(x) = sin(x)"""
+    return math.sin(x)
+
+
+def f3(x, y):
+    """f(x,y) = x + y"""
+    return x + y
+
+
+def f4(x, y):
+    """f(x,y) = x * y"""
+    return x * y
+
+
+# Основная программа
+print("ВЫЧИСЛЕНИЕ ИНТЕГРАЛОВ")
+print("=" * 40)
+
+# Определенный интеграл 1: ∫x² dx от 0 до 1
+result1 = calculate_integral(f1, 0, 1)
+print(f"\n1. ∫x² dx от 0 до 1")
+print(f"   Результат: {result1:.4f}")
+print(f"   Точное значение: 0.3333")
+print(f"   Ошибка: {abs(result1 - 1 / 3):.4f}")
+
+# Определенный интеграл 2: ∫sin(x) dx от 0 до π
+result2 = calculate_integral(f2, 0, math.pi)
+print(f"\n2. ∫sin(x) dx от 0 до π")
+print(f"   Результат: {result2:.4f}")
+print(f"   Точное значение: 2.0000")
+print(f"   Ошибка: {abs(result2 - 2):.4f}")
+
+# Двойной интеграл 1: ∫∫(x+y) dy dx от 0 до 1
+result3 = calculate_double_integral(f3, 0, 1, 0, 1)
+print(f"\n3. ∫∫(x+y) dy dx от 0 до 1")
+print(f"   Результат: {result3:.4f}")
+print(f"   Точное значение: 1.0000")
+
+# Двойной интеграл 2: ∫∫(x*y) dy dx от 0 до 2
+result4 = calculate_double_integral(f4, 0, 2, 0, 1)
+print(f"\n4. ∫∫(x*y) dy dx от 0 до 2")
+print(f"   Результат: {result4:.4f}")
+print(f"   Точное значение: 1.0000")
+
+print("\n" + "=" * 40)
+print("Готово!")
