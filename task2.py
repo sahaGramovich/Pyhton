@@ -1,23 +1,24 @@
-# Ввод данных
-lengths = list(map(int, input("Введите длины участков через пробел: ").split()))
-speeds = list(map(int, input("Введите скорости на участках через пробел: ").split()))
-k = int(input("Номер участка въезда k: "))
-p = int(input("Номер участка выезда p: "))
+import numpy as np
 
-# Участки нумеруются с 1, значит переводим в индексы Python
+# Входные данные
+lengths = np.array([20, 8, 9, 18, 5, 12, 16, 16, 6, 7])
+speeds = np.array([44, 70, 44, 66, 46, 38, 38, 37, 66, 67])
+
+k = 4  # въехал на участок 4
+p = 7  # выехал после 7-го участка
+
+# индексы для Python (начинаются с 0)
 start = k - 1
-end = p - 1
+end = p
 
-# Вычисление длины пути
-distance = sum(lengths[start:end+1])
+# отрезки, на которых ехал
+segment_lengths = lengths[start:end]
+segment_speeds = speeds[start:end]
 
-# Время на каждом участке = длина / скорость
-time = sum(lengths[i] / speeds[i] for i in range(start, end+1))
+S = np.sum(segment_lengths)
+T = np.sum(segment_lengths / segment_speeds)
+V = S / T
 
-# Средняя скорость: S / T
-average_speed = distance / time
-
-# Вывод результатов
-print(f"S = {distance} км")
-print(f"T = {time:.2f} час")
-print(f"V = {average_speed:.2f} км/ч")
+print(f"Пройденное расстояние: {S:.0f} км")
+print(f"Время в пути: {T:.2f} ч")
+print(f"Средняя скорость: {V:.2f} км/ч")
